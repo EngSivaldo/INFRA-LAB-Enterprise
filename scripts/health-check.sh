@@ -44,6 +44,18 @@ mostrar_disco()
     df -h /
 }
 
+mostrar_cpu()
+{
+    echo "===== CPU DO SISTEMA ====="
+
+    echo "Processadores disponíveis:"
+    nproc
+
+    echo "Carga do sistema:"
+    uptime
+}
+
 mostrar_informacoes_sistema
 mostrar_memoria
 mostrar_disco
+mostrar_cpu
