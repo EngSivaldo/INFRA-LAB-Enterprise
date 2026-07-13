@@ -30,4 +30,12 @@ mostrar_informacoes_sistema()
     uptime
 }
 
+mostrar_memoria()
+{
+    echo "===== MEMÓRIA DO SISTEMA ====="
+
+    free -h
+}
+
 mostrar_informacoes_sistema
+mostrar_memoria
