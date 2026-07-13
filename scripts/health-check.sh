@@ -37,5 +37,13 @@ mostrar_memoria()
     free -h
 }
 
+mostrar_disco()
+{
+    echo "===== USO DE DISCO ====="
+
+    df -h /
+}
+
 mostrar_informacoes_sistema
 mostrar_memoria
+mostrar_disco
