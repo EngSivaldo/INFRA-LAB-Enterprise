@@ -55,7 +55,23 @@ mostrar_cpu()
     uptime
 }
 
+mostrar_sistema_operacional()
+{
+    echo "===== SISTEMA OPERACIONAL ====="
+
+    source /etc/os-release
+
+    echo "Distribuição:"
+    echo "$PRETTY_NAME"
+
+    echo "ID:"
+    echo "$ID"
+
+    echo "Versão:"
+    echo "$VERSION_ID"
+}
 mostrar_informacoes_sistema
 mostrar_memoria
 mostrar_disco
 mostrar_cpu
+mostrar_sistema_operacional
