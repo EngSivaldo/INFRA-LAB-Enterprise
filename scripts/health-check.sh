@@ -1,75 +1,68 @@
 #!/bin/bash
-#
+
+# ==========================================================
+# INFRA-LAB Enterprise
 # Script: health-check.sh
-#
-# Projeto: INFRA-LAB Enterprise
-#
-# Objetivo:
-#   Realizar verificações básicas de saúde do servidor Linux.
-#
-# Autor:
-#   Sivaldo Vieira
-#
-# Versão:
-#   1.0
-#
-mostrar_informacoes_sistema()
-{
-    echo "===== INFORMAÇÕES DO SISTEMA ====="
+# Descrição: Verificação da saúde do sistema
+# ==========================================================
 
-    echo "Servidor:"
-    hostname
+LOG_DIR="/var/log/infra-lab"
+LOG_FILE="$LOG_DIR/health.log"
 
-    echo "Usuário:"
-    whoami
+mkdir -p "$LOG_DIR"
+touch "$LOG_FILE"
 
-    echo "Data e hora:"
-    date
-
-    echo "Tempo ativo:"
-    uptime
+log() {
+    echo "$1" | tee -a "$LOG_FILE"
 }
 
-mostrar_memoria()
-{
-    echo "===== MEMÓRIA DO SISTEMA ====="
+mostrar_informacoes_sistema() {
+    log "===== INFORMAÇÕES DO SISTEMA ====="
 
-    free -h
+    log "Servidor: $(hostname)"
+    log "Usuário: ${SUDO_USER:-$(whoami)}"
+    log "Data e hora: $(date)"
+    log "Tempo ativo: $(uptime -p)"
 }
 
-mostrar_disco()
-{
-    echo "===== USO DE DISCO ====="
+mostrar_memoria() {
+    log ""
+    log "===== MEMÓRIA DO SISTEMA ====="
 
-    df -h /
+    free -h | tee -a "$LOG_FILE"
 }
 
-mostrar_cpu()
-{
-    echo "===== CPU DO SISTEMA ====="
+mostrar_disco() {
+    log ""
+    log "===== USO DE DISCO ====="
 
-    echo "Processadores disponíveis:"
-    nproc
-
-    echo "Carga do sistema:"
-    uptime
+    df -h / | tee -a "$LOG_FILE"
 }
 
-mostrar_sistema_operacional()
-{
-    echo "===== SISTEMA OPERACIONAL ====="
+mostrar_cpu() {
+    log ""
+    log "===== CPU DO SISTEMA ====="
+
+    log "Processadores disponíveis:"
+    nproc | tee -a "$LOG_FILE"
+
+    log ""
+
+    log "Carga do sistema:"
+    uptime | tee -a "$LOG_FILE"
+}
+
+mostrar_sistema_operacional() {
+    log ""
+    log "===== SISTEMA OPERACIONAL ====="
 
     source /etc/os-release
 
-    echo "Distribuição:"
-    echo "$PRETTY_NAME"
-
-    echo "ID:"
-    echo "$ID"
-
-    echo "Versão:"
-    echo "$VERSION_ID"
+    log "Distribuição: $PRETTY_NAME"
+    log "ID: $ID"
+    log "Versão: $VERSION_ID"
 }
+
 mostrar_informacoes_sistema
 mostrar_memoria
 mostrar_disco
