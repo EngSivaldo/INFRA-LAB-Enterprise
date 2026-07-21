@@ -1,297 +1,375 @@
+Sivaldo, o `01-architecture-overview.md` deve ser atualizado para refletir o estado atual (não mais só Apache/Nginx). Ele deve mostrar a **visão macro da infraestrutura**.
+
+Substitua pelo conteúdo abaixo:
+
+```markdown
 # INFRA-LAB Enterprise
 
 # Arquitetura Geral da Infraestrutura
 
-**Documento:** 01-architecture-overview
-**Projeto:** INFRA-LAB Enterprise
-**Versão:** 1.0
-**Status:** Em desenvolvimento
+**Documento:** 01-architecture-overview  
+**Projeto:** INFRA-LAB Enterprise  
+**Versão:** 2.0  
+**Status:** Em desenvolvimento  
 
 ---
 
 # 1. Visão Geral
 
-O INFRA-LAB Enterprise é um laboratório corporativo de infraestrutura criado com o objetivo de simular um ambiente real de Tecnologia da Informação (TI).
+O INFRA-LAB Enterprise é um laboratório de infraestrutura corporativa desenvolvido para simular um ambiente real de Tecnologia da Informação.
 
-O projeto contempla a construção, configuração e documentação de serviços fundamentais utilizados em ambientes profissionais, incluindo:
+O projeto tem como objetivo aplicar na prática conhecimentos de:
 
-* Redes Linux;
-* Serviços de infraestrutura;
-* Servidores Web;
-* Gerenciamento de serviços;
-* Segurança básica;
-* Automação;
-* Práticas DevOps;
-* Evolução futura para Cloud Computing.
+- Administração Linux;
+- Redes TCP/IP;
+- Serviços de infraestrutura;
+- Servidores Web;
+- Banco de Dados;
+- Segurança;
+- DevOps;
+- Cloud Computing.
 
-O laboratório representa uma pequena infraestrutura corporativa onde servidores possuem responsabilidades específicas e clientes acessam serviços disponibilizados pela rede interna.
+A arquitetura utiliza servidores com responsabilidades separadas, seguindo princípios utilizados em ambientes corporativos.
 
 ---
 
 # 2. Objetivo da Arquitetura
 
-A arquitetura foi projetada para demonstrar conhecimentos práticos em:
+A arquitetura foi planejada para demonstrar:
 
-* Administração Linux;
-* Redes TCP/IP;
-* Serviços corporativos;
-* Troubleshooting;
-* Organização de ambientes;
-* Documentação técnica.
+- Separação de responsabilidades;
+- Organização de serviços;
+- Administração de servidores;
+- Diagnóstico de problemas;
+- Documentação técnica;
+- Evolução contínua da infraestrutura.
 
-O objetivo não é apenas configurar serviços, mas aplicar uma abordagem profissional de infraestrutura:
+Modelo aplicado:
 
-**Planejar → Implementar → Testar → Documentar → Evoluir**
+```
+
+Planejar
+↓
+Implementar
+↓
+Testar
+↓
+Documentar
+↓
+Evoluir
+
+```
 
 ---
 
 # 3. Topologia Geral
 
-A infraestrutura utiliza máquinas virtuais gerenciadas através do VirtualBox.
+O laboratório utiliza VirtualBox com duas redes:
 
-O ambiente utiliza uma arquitetura baseada em duas redes:
-
-* Interface Bridge para comunicação externa;
-* Rede Interna para comunicação corporativa entre servidores e clientes.
+- Rede Bridge para comunicação externa;
+- Rede Interna para comunicação corporativa.
 
 Arquitetura atual:
+
+```
 
 ```
                      Internet
                         |
                         |
-                 Rede Bridge
+                Rede Física / Bridge
                         |
                         |
                 debian-router
-       Gateway + DHCP + NAT + Nginx
+          Gateway + NAT + DHCP + DNS
                         |
                         |
-          Rede Interna 10.200.0.0/24
+             Rede Interna 10.200.0.0/24
                         |
-        --------------------------------
-        |              |               |
-        |              |               |
- debian-apache      Ubuntu           Kali
- Servidor Web       Cliente          Cliente
+    -----------------------------------------
+    |                  |                    |
+    |                  |                    |
+```
+
+debian-apache        Windows 11           Ubuntu/Kali
+Servidor LAMP        Cliente              Clientes
+
 ```
 
 ---
 
 # 4. Componentes da Infraestrutura
 
-# 4.1 Servidor de Roteamento e Serviços de Infraestrutura
+## 4.1 Debian Router
 
-## Hostname
+Hostname:
 
 ```
+
 debian-router
-```
-
-## Função
-
-O servidor `debian-router` atua como o núcleo da infraestrutura de rede do laboratório.
-
-Ele é responsável pela comunicação entre a rede externa e a rede interna.
-
-## Interfaces de Rede
-
-### Interface Bridge
-
-Responsável pela comunicação com a rede física e acesso externo.
-
-Funções:
-
-* Acesso à Internet;
-* Atualização de pacotes;
-* Comunicação com a rede local física.
-
-Exemplo de endereço:
 
 ```
-192.168.0.x
-```
 
----
+Função:
 
-### Interface Rede Interna
+Servidor central de infraestrutura.
 
-Responsável pela comunicação com os servidores e clientes do laboratório.
+Responsabilidades:
 
-Rede:
+- Gateway da rede interna;
+- Roteamento;
+- NAT;
+- DHCP;
+- DNS BIND9;
+- Nginx.
 
-```
-10.200.0.0/24
-```
+Interfaces:
 
-Gateway:
-
-```
-10.200.0.1
-```
-
----
-
-## Serviços executados
-
-O servidor possui as seguintes responsabilidades:
-
-* Gateway da rede interna;
-* Servidor DHCP;
-* Roteamento entre redes;
-* NAT para saída dos clientes;
-* Servidor Web Nginx;
-* Controle da comunicação interna.
-
----
-
-# 4.2 Servidor Web Apache
-
-## Hostname
+Rede externa:
 
 ```
-debian-apache
+
+192.168.0.200
+
 ```
-
-## Responsabilidades
-
-Servidor dedicado à hospedagem Web utilizando Apache HTTP Server.
-
-Funções:
-
-* Hospedagem de aplicações Web;
-* Serviço HTTP;
-* Simulação de servidor corporativo.
-
-## Interfaces de Rede
 
 Rede interna:
 
 ```
+
+10.200.0.1/24
+
+```
+
+Serviços:
+
+| Serviço | Status |
+|-|-|
+| NAT | Ativo |
+| DHCP | Ativo |
+| DNS BIND9 | Ativo |
+| Nginx | Ativo |
+
+---
+
+# 4.2 Debian Apache
+
+Hostname:
+
+```
+
+debian-apache
+
+```
+
+Função:
+
+Servidor Web e Aplicações.
+
+Responsabilidades:
+
+- Apache HTTP Server;
+- Virtual Hosts;
+- PHP;
+- MariaDB;
+- Hospedagem de aplicações Web.
+
+IP:
+
+```
+
 10.200.0.102
-```
-
-Bridge:
 
 ```
-192.168.0.100
+
+Stack:
+
+```
+
+Linux
+|
+Apache
+|
+PHP
+|
+MariaDB
+
+```
+
+Serviços:
+
+| Serviço | Status |
+|-|-|
+| Apache | Ativo |
+| PHP 8.4 | Ativo |
+| MariaDB 11 | Ativo |
+
+Virtual Host:
+
+```
+
+laboratorio.local
+
+```
+
+DocumentRoot:
+
+```
+
+/var/www/laboratorio.local/public_html
+
 ```
 
 ---
 
-# 5. Clientes da Rede
+# 4.3 Cliente Windows
+
+Função:
+
+Simular estação corporativa.
+
+Responsabilidades:
+
+- Receber IP via DHCP;
+- Utilizar DNS interno;
+- Acessar serviços corporativos.
+
+IP atual:
+
+```
+
+10.200.0.103
+
+```
+
+DNS:
+
+```
+
+10.200.0.1
+
+```
+
+Testes realizados:
+
+- Resolução DNS;
+- Acesso HTTP;
+- Comunicação com Apache.
+
+---
+
+# 4.4 Clientes Linux
 
 ## Ubuntu
 
 Responsabilidades:
 
-* Estação cliente Linux;
-* Testes de conectividade;
-* Validação dos serviços;
-* Acesso aos servidores internos.
-
----
+- Testes de rede;
+- Administração;
+- Validação dos serviços.
 
 ## Kali Linux
 
 Responsabilidades:
 
-* Testes de rede;
-* Diagnóstico de conectividade;
-* Ferramentas de análise;
-* Simulação de ambiente de segurança.
+- Diagnóstico;
+- Segurança;
+- Ferramentas de análise.
 
 ---
 
-# 6. Serviços Implementados
+# 5. Serviços Implementados
 
-# DHCP
+## DHCP
 
-Responsável por fornecer automaticamente endereços IP aos clientes da rede interna.
+Responsável pela configuração automática dos clientes.
 
 Rede:
 
 ```
+
 10.200.0.0/24
+
 ```
 
 Gateway entregue:
 
 ```
+
 10.200.0.1
+
+```
+
+DNS entregue:
+
+```
+
+10.200.0.1
+
 ```
 
 ---
 
-# NAT
+## DNS BIND9
 
-Responsável por permitir que máquinas da rede interna acessem a Internet utilizando o servidor `debian-router` como gateway.
+Servidor DNS interno.
 
-Fluxo:
-
-```
-Cliente interno
-       |
-       |
-Rede Interna
-       |
-       |
-debian-router
-       |
-       |
-Bridge
-       |
-       |
-Internet
-```
-
----
-
-# Nginx
-
-Servidor Web instalado no `debian-router`.
-
-Responsabilidades:
-
-* Publicação de conteúdo Web;
-* Testes HTTP;
-* Simulação de serviço corporativo;
-* Futuro uso como proxy reverso.
-
-Porta utilizada:
+Domínio:
 
 ```
-80/TCP
+
+laboratorio.local
+
+```
+
+Responsável por resolver:
+
+```
+
+laboratorio.local
+|
+|
+10.200.0.102
+
 ```
 
 ---
 
-# Apache
+## Apache
 
-Servidor Web instalado no `debian-apache`.
+Servidor Web principal.
 
-Responsabilidades:
+Responsável por:
 
-* Hospedagem de aplicações Web;
-* Testes de comunicação HTTP;
-* Separação de responsabilidades entre serviços.
-
----
-
-# 7. Modelo de Rede
-
-A arquitetura utiliza segmentação baseada em funções:
-
-| Rede                       | Função                                              |
-| -------------------------- | --------------------------------------------------- |
-| Bridge                     | Comunicação externa com rede física                 |
-| Rede Interna 10.200.0.0/24 | Comunicação corporativa entre servidores e clientes |
+- Sites internos;
+- Aplicações PHP;
+- Testes HTTP.
 
 ---
 
-# 8. Princípios Arquiteturais
+## MariaDB
 
-O projeto segue princípios utilizados em ambientes profissionais.
+Banco de dados utilizado pelas aplicações.
+
+Responsável por:
+
+- Armazenamento;
+- Testes de integração PHP + Banco.
+
+---
+
+## Nginx
+
+Servidor Web auxiliar no debian-router.
+
+Uso atual:
+
+- Publicação Web;
+- Estudos futuros de proxy reverso.
+
+---
+
+# 6. Princípios Arquiteturais
 
 ## Separação de responsabilidades
 
@@ -299,9 +377,9 @@ Cada servidor possui uma função definida.
 
 Exemplo:
 
-* Gateway controla comunicação de rede;
-* Servidor Web hospeda aplicações;
-* Clientes utilizam serviços disponibilizados.
+- Router controla rede;
+- Apache hospeda aplicações;
+- Clientes consomem serviços.
 
 ---
 
@@ -309,36 +387,45 @@ Exemplo:
 
 Toda alteração relevante deve possuir:
 
-* Registro técnico;
-* Commit Git;
-* Histórico de evolução.
+- Registro técnico;
+- Atualização documental;
+- Commit Git.
 
 ---
 
 ## Reprodutibilidade
 
-As configurações devem permitir que outro profissional consiga compreender, reconstruir e evoluir o ambiente.
+A infraestrutura deve permitir que outro administrador consiga:
+
+- Entender;
+- Recriar;
+- Manter;
+- Evoluir o ambiente.
 
 ---
 
-# 9. Evolução Planejada
+# 7. Evolução Planejada
 
-O laboratório será expandido progressivamente com novos componentes:
+Próximas implementações:
 
-* DNS interno;
-* Servidor de arquivos;
-* Banco de dados;
-* Monitoramento;
-* Docker;
-* CI/CD;
-* Kubernetes;
-* Terraform;
-* Cloud AWS.
+- Squid Proxy;
+- HTTPS;
+- Servidor de arquivos Samba;
+- Monitoramento;
+- Docker;
+- Kubernetes;
+- Terraform;
+- AWS.
 
 ---
 
-# 10. Conclusão
+# 8. Conclusão
 
-O INFRA-LAB Enterprise representa uma infraestrutura corporativa simulada, construída com foco em aprendizado prático e demonstração profissional de competências em Linux, Redes, DevOps e Cloud.
+O INFRA-LAB Enterprise representa uma infraestrutura corporativa simulada, integrando serviços de rede, servidores Web, banco de dados e clientes Windows/Linux.
 
-Este documento serve como referência arquitetural para todas as próximas implementações do laboratório.
+O projeto segue uma abordagem profissional baseada em:
+
+Planejamento → Implementação → Testes → Documentação → Evolução.
+```
+
+Esse documento agora representa o laboratório **real**, não a versão inicial.
